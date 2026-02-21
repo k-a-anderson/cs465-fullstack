@@ -7,6 +7,7 @@ import { TripDataService } from '../services/trip-data.service';
 import { Trip } from '../models/trip';
 
 import { Router } from '@angular/router';
+import { Authentication } from '../services/authentication';
 
 @Component({
   selector: 'app-trip-listing',
@@ -18,12 +19,16 @@ import { Router } from '@angular/router';
 })
 
 export class TripListingComponent implements OnInit {
-  trips!: Trip[];
+  trips: Trip[] = [];
   message: string = '';
 
-  constructor(private tripDataService: TripDataService, private router: Router) 
+  constructor(private tripDataService: TripDataService, private router: Router, private authentication: Authentication) 
   {
     console.log('trip-listing constructor');
+  }
+
+  public isLoggedIn(): boolean {
+    return this.authentication.isLoggedIn();
   }
 
   public addTrip(): void {
@@ -34,7 +39,9 @@ export class TripListingComponent implements OnInit {
     this.tripDataService.getTrips()
       .subscribe({
         next: (value: any) => {
+          console.log('Trips value: ' + value);
           this.trips = value;
+          console.log('Trips length: ' + this.trips.length);
           if(value.length > 0)
           {
             this.message = 'There are ' + value.length + ' trips available.';
