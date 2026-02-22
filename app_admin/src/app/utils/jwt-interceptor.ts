@@ -29,4 +29,10 @@ export class JwtInterceptor implements HttpInterceptor {
     }
     return next.handle(request);
   }
-}
+} 
+export const authInterceptPriovider: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: JwtInterceptor,
+  multi: true
+};
+

@@ -94,41 +94,49 @@ const tripsUpdateTrip = async(req,res)=> {
     // console.log(req.params);
     // console.log(req.body);
 
-    const q = await Model
-        .findOneAndUpdate(
-            {'code' : req.params.tripCode },
-            {
-                code: req.body.code,
-                name: req.body.name,
-                length: req.body.length,
-                start: req.body.start,
-                resort: req.body.resort,
-                perPerson: req.body.perPerson,
-                image: req.body.image,
-                description: req.body.description
-            }
-        )
-        .exec();
+    try {
+        const q = await Model
+            .findOneAndUpdate(
+                {'code' : req.params.tripCode },
+                {
+                    code: req.body.code,
+                    name: req.body.name,
+                    length: req.body.length,
+                    start: req.body.start,
+                    resort: req.body.resort,
+                    perPerson: req.body.perPerson,
+                    image: req.body.image,
+                    description: req.body.description
+                },
+                { new: true }
+                )
+                .exec();
 
-        if(!q) {
-            // Database returned no data
+            if(!q) {
+                // Database returned no data
+                return res
+                    .status(404)
+                    .json({message: "Trip not found"});
+            } 
+            // Return resulting updated trip
             return res
-                .status(400)
-                .json(err);
-        } else {
-            //Return resulting updated trip
-            return res
-                .status(201)
+                .status(200)
                 .json(q);
-        }
+    } catch (err) {
+        return res
+            .status(400)
+            .json(err); 
+    }
+};
         // Uncomment the following line to show results of operation 
         //on the console
         // console.log(q);
-};
+
 
 module.exports = {
-    tripsList,
-    tripsFindByCode,
-    tripsAddTrip,
-    tripsUpdateTrip
+  tripsList,
+  tripsFindByCode,
+  tripsAddTrip,
+  tripsUpdateTrip
 };
+

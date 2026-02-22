@@ -1,15 +1,15 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import { JwtInterceptor } from './utils/jwt-interceptor';
+import { authInterceptPriovider, JwtInterceptor } from './utils/jwt-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(HttpClientModule),
-    JwtInterceptor
+    authInterceptPriovider
   ]
 };
